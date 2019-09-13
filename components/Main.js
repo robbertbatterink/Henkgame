@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     minWidth: 200,
   },
   buttonContainer: {
-    flex: 2,  
+    flex: 2,
   },
   titleText: {
       flex: 4,

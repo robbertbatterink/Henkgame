@@ -73,17 +73,17 @@ export default class TeamScreen extends Component {
         }
         if(player3 != null){
             setTimeout(
-                function() {this.changePlayer(id, 2, player3);}.bind(this),300
+                function() {this.changePlayer(id, 2, player3);}.bind(this),500
             );
         }
         if(player4 != null){
             setTimeout(
-                function() {this.changePlayer(id, 3, player4);}.bind(this),300
+                function() {this.changePlayer(id, 3, player4);}.bind(this),500
             );
         }
         if(teamName != null){
             setTimeout(
-                function() {this.changeTeam(id, teamName);}.bind(this),300
+                function() {this.changeTeam(id, teamName);}.bind(this),500
             );
         }
         this.setModalVisible();
@@ -133,6 +133,7 @@ export default class TeamScreen extends Component {
     }
 
     static navigationOptions = {
+        header: null,
         title: "Make Teams",
     }
 
@@ -166,38 +167,43 @@ export default class TeamScreen extends Component {
 
             return(
                 <Modal
-                  animationType="slide"
-                  transparent={false}
+                  animationType="fade"
+                  transparent={true}
                   visible={this.state.modalVisible}
                   onRequestClose={() => {
                     this.setModalVisible();
                   }}>
-                  <View style={{marginTop: 22}}>
+                  <View style={styles.modal}>
                     <View>
-                      <Text>This is the select screen for team {this.state.teamModal}</Text>
+                      <Text style={styles.titleText}>This is the select screen for team {this.state.teamModal}</Text>
+                      <Text style={{color:'white'}}>Team name:</Text>
                       <TextInput
-                          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                          style={styles.textInput}
                           onChangeText={(text) => {teamname = text.toString()}}
                           placeholder={this.state.teamName}
                         />
+                        <Text style={{color:'white'}}>Player 1 name:</Text>
                         <TextInput
-                        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                        style={styles.textInput}
                         onChangeText={(text) => {player1 = text.toString()}}
                         placeholder={this.state.players[0]}
                       />
+                      <Text style={{color:'white'}}>Player 2 name:</Text>
                       <TextInput
-                      style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                      style={styles.textInput}
                       onChangeText={(text) => {player2 = text.toString()}}
                       placeholder={this.state.players[1]}
                       />
+                      <Text style={{color:'white'}}>Player 3 name:</Text>
                       <TextInput
-                        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                        style={styles.textInput}
                         onChangeText={(text) => {player3 = text.toString()}}
                         placeholder={this.state.players[2]}
                       />
+                      <Text style={{color:'white'}}>Player 4 name:</Text>
                       <TextInput
-                          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-                          onChangeText={(text) => {player4 = text.toString()}}
+                          style={styles.textInput}
+                          onChangeText={(text) => {player4 = text.toString(); console.log(text)}}
                           placeholder={this.state.players[3]}
                       />
                       <View>
@@ -272,6 +278,7 @@ export default class TeamScreen extends Component {
                 <Teams modal={this.setModalVisible} teams={this.state.teams}/>
                 <TeamModal visibleModal={this.state.modalVisible} modal={this.setModalVisible} teams={this.state.teams} team={this.state.teamModal}/>
 
+
             <View style={styles.buttonContainer}>
             <AddTeam />
               <View style={styles.buttons}>
@@ -288,6 +295,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
     alignItems: 'center',
+    paddingTop: 50,
   },
   buttons: {
     paddingTop: 15,
@@ -300,11 +308,16 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   titleText: {
-      flex: 1,
       color: 'white',
       fontSize: 20,
       fontWeight: 'bold',
       paddingTop: 15,
+  },
+  modal: {
+      backgroundColor: 'blue',
+      borderRadius: 15,
+      alignItems: 'center',
+      flex: 1,
   },
   teamDisplay: {
       padding: 10,
@@ -317,4 +330,11 @@ const styles = StyleSheet.create({
       borderColor: 'white',
       overflow: 'hidden'
   },
+  textInput: {
+      height: 40,
+      paddingLeft: 10,
+      borderColor: 'white',
+      borderWidth: 1,
+      borderRadius: 15,
+  }
 });

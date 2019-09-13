@@ -1,9 +1,10 @@
 import React , { Component } from 'react';
-import { StyleSheet, Text, View, Button, Spacer, List, ListItem } from 'react-native';
+import { StyleSheet, Text, View, Button, Spacer, List, ListItem, Modal } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import * as Expo from 'expo';
 import update from 'immutability-helper';
-import Dice from './Dice.js'
+import Dice from './Dice.js';
+import Challenges from './Challenges.js';
 
 export default class BoardScreen extends Component {
     constructor(props){
@@ -14,8 +15,10 @@ export default class BoardScreen extends Component {
             curTurnPlayer: null,
             curTeamPosition: null,
             moveAmount: null,
+            faceValue: null,
             showDice: false,
             finishedTurn: false,
+            showChallengeModal: false,
             teams: [
                 {
                     id: 1,
@@ -63,8 +66,10 @@ export default class BoardScreen extends Component {
         this.moveAmount = this.moveAmount.bind(this);
         this.updateTeamPosition = this.updateTeamPosition.bind(this);
         this.movePiece = this.movePiece.bind(this);
+        this.setModalVisible = this.setModalVisible.bind(this);
     }
     static navigationOptions = {
+        header: null,
         title: "Het Bord",
     }
 
@@ -104,6 +109,7 @@ export default class BoardScreen extends Component {
                 curTeamPosition: team['position'],
                 finishedTurn: false,
                 showDice: true,
+                faceValue: null,
             })
         }
     }
@@ -189,6 +195,9 @@ export default class BoardScreen extends Component {
                 console.log(startPos, endPos);
                 if(startPos === endPos) {
                     this.setState({moveAmount: null, finishedTurn: true});
+                    sleep(1500).then(() => {
+                        this.setModalVisible();
+                    });
                 }
             });
             sleepAmount = sleepAmount + 1000;
@@ -225,8 +234,12 @@ export default class BoardScreen extends Component {
         });
     }
 
-    moveAmount(amount){
-        this.setState({moveAmount: amount, showDice: false});
+    moveAmount(data){
+        this.setState({moveAmount: data[0],faceValue: data[1], showDice: false});
+    }
+
+    setModalVisible() {
+        this.setState({showChallengeModal: !this.state.showChallengeModal});
     }
 
     renderPieces = (pos) => {
@@ -373,6 +386,23 @@ export default class BoardScreen extends Component {
             }
         }
 
+        const ChallengeModel = () => {
+            return(
+                <Modal
+                  animationType="fade"
+                  transparent={false}
+                  visible={this.state.showChallengeModal}
+                  onRequestClose={() => {
+                    this.setModalVisible();
+                  }}>
+                  <View style={styles.modal}>
+                      <Text> Challenge comes here</Text>
+                      <Challenges />
+                  </View>
+                </Modal>
+            )
+        }
+
       return (
           <View style={styles.container}>
             <View style={styles.board}>
@@ -383,9 +413,10 @@ export default class BoardScreen extends Component {
             </View>
             <View style={styles.buttonContainer}>
                 <DiceSection />
-                <Text style={{color: "white"}}>{this.state.moveAmount}</Text>
+                <Text style={{color: "white", fontSize: 52}}>{String.fromCharCode(this.state.faceValue)}</Text>
                 <NextTurn />
                 <MovePlayer />
+                <ChallengeModel />
             </View>
           </View>
       );
@@ -408,6 +439,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 2,
+    alignItems: 'center',
   },
   titleText: {
       flex: 4,
