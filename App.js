@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import {createAppContainer } from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
 import * as Expo from 'expo';
 import MainScreen from "./components/Main.js";
 import TeamScreen from "./components/Start.js";
@@ -14,7 +15,6 @@ const NavigationApp = createStackNavigator({
 }, {
     navigationOptions: {
         headerStyle: {
-            marginTop: Expo.Constants.statusBarHeight
         }
     }
 });
