@@ -67,6 +67,7 @@ export default class BoardScreen extends Component {
         this.updateTeamPosition = this.updateTeamPosition.bind(this);
         this.movePiece = this.movePiece.bind(this);
         this.setModalVisible = this.setModalVisible.bind(this);
+        this.updateTeams = this.updateTeams.bind(this);
     }
     static navigationOptions = {
         header: null,
@@ -242,6 +243,10 @@ export default class BoardScreen extends Component {
         this.setState({showChallengeModal: !this.state.showChallengeModal});
     }
 
+    updateTeams(newTeams){
+        this.setState({teams: newTeams});
+    }
+
     renderPieces = (pos) => {
         var values = this.state.gameState[pos];
 
@@ -397,7 +402,7 @@ export default class BoardScreen extends Component {
                   }}>
                   <View style={styles.modal}>
                       <Text> Challenge comes here</Text>
-                      <Challenges />
+                      <Challenges teams={this.state.teams} handlePoints={{newTeams: (data) => this.updateTeams(data)}} />
                   </View>
                 </Modal>
             )

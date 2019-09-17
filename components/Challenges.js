@@ -1,5 +1,6 @@
 import React , { Component } from 'react';
 import { StyleSheet, Text, View, Button, Modal, Alert, ScrollView, TextInput } from 'react-native';
+import update from 'immutability-helper';
 
 class Challenges extends Component {
     constructor(props){
@@ -7,16 +8,45 @@ class Challenges extends Component {
         this.state = {
             challengeNumber: null,
             numberOfChallenges: 6,
+            teams: null,
         }
+        this.setTeams = this.setTeams.bind(this);
     }
 
     componentDidMount(){
         var randomInt = Math.floor(Math.random() * this.state.numberOfChallenges) + 1;
         this.setState({challengeNumber: randomInt});
+        var teams = this.props.teams
+        this.setTeams(teams);
     }
+
+    setTeams(teams) {
+        this.setState({teams: teams})
+    }
+
+    updateTeamPoints(id, points){
+        var data=this.state.teams
+
+        var teamIndex = data.findIndex(function(c) {
+            return c.id === id;
+        })
+
+        var curPoints = data[teamIndex].points;
+
+        var updatedPoints = curPoints + points;
+
+        var updated = update(data[teamIndex], {points: {$set: updatedPoints}});
+
+        var newData = update(data, {
+            $splice: [[teamIndex, 1, updated]]
+        });
+        this.setState({teams: newData});
+    }
+
 
     render(){
         const Challenge = () => {
+                    console.log(this.state)
             switch(this.state.challengeNumber){
                 case 1:
                 return <C01 />
