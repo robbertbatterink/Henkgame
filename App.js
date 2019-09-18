@@ -6,6 +6,7 @@ import * as Expo from 'expo';
 import MainScreen from "./components/Main.js";
 import TeamScreen from "./components/Start.js";
 import BoardScreen from "./components/Board.js";
+import Challenges from './components/Challenges.js';
 
 
 const NavigationApp = createStackNavigator({

@@ -1,5 +1,5 @@
 import React , { Component } from 'react';
-import { StyleSheet, Text, View, Button, Modal, Alert, ScrollView, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, Modal, Alert, ScrollView, TextInput, Image } from 'react-native';
 import update from 'immutability-helper';
 
 class Challenges extends Component {
@@ -9,19 +9,27 @@ class Challenges extends Component {
             challengeNumber: null,
             numberOfChallenges: 6,
             teams: null,
+            curTeam: null,
+            points: null,
         }
         this.setTeams = this.setTeams.bind(this);
     }
 
-    componentDidMount(){
-        var randomInt = Math.floor(Math.random() * this.state.numberOfChallenges) + 1;
-        this.setState({challengeNumber: randomInt});
-        var teams = this.props.teams
-        this.setTeams(teams);
+    static navigationOptions = {
+        header: null,
+        title: "Het Bord",
     }
 
-    setTeams(teams) {
-        this.setState({teams: teams})
+    componentDidMount(){
+        var randomInt =  1;//Math.floor(Math.random() * this.state.numberOfChallenges) + 1;
+        this.setState({challengeNumber: randomInt});
+        var teams = this.props.teams;
+        var team = this.props.curTeam;
+        this.setTeams(teams, team);
+    }
+
+    setTeams(teams, curTeam) {
+        this.setState({teams: teams, curTeam: curTeam})
     }
 
     updateTeamPoints(id, points){
@@ -46,7 +54,6 @@ class Challenges extends Component {
 
     render(){
         const Challenge = () => {
-                    console.log(this.state)
             switch(this.state.challengeNumber){
                 case 1:
                 return <C01 />
@@ -78,47 +85,107 @@ class Challenges extends Component {
         }
 
         const C01 = () => {
+            if(this.state.points === null){
+                this.setState({points: -1});
+            }
             return(
-                <Text>Challenge 1</Text>
+                <View style={styles.modal}>
+                    <Text style={styles.titleText}>Whats App</Text>
+                    <View style={styles.line} />
+                    <Text style={styles.descText}>Je veroorzaakt een discussie op whats app</Text>
+                    <Text style={styles.pointsText}> je verliest 1 Henk-punt</Text>
+                    <View style={styles.line} />
+                    <Image
+                    style={styles.image}
+                    source={require('./Henk.png')} />
+                </View>
             )
         }
 
         const C02 = () => {
             return(
-                <Text>Challenge 2</Text>
+                <View>
+                <Text style={styles.titleText}>Challenge 1</Text>
+                </View>
             )
         }
 
         const C03 = () => {
             return(
-                <Text>Challenge 3</Text>
+                <View>
+                <Text style={styles.titleText}>Challenge 1</Text>
+                </View>
             )
         }
 
         const C04 = () => {
             return(
-                <Text>Challenge 4</Text>
+                <View>
+                <Text style={styles.titleText}>Challenge 1</Text>
+                </View>
             )
         }
 
         const C05 = () => {
             return(
-                <Text>Challenge 5</Text>
+                <View>
+                <Text style={styles.titleText}>Challenge 1</Text>
+                </View>
             )
         }
 
         const C06 = () => {
             return(
-                <Text>Challenge 6</Text>
+                <View>
+                <Text style={styles.titleText}>Challenge 1</Text>
+                </View>
             )
         }
 
         return (
-            <View>
+            <View style={styles.container}>
                 <Challenge />
             </View>
         );
     }
 }
+const styles = StyleSheet.create({
+  container: {
+      alignItems: 'center',
+      margin: 50,
+  },
+  modal: {
+      backgroundColor: 'blue',
+      borderRadius: 15,
+      alignItems: 'center',
+  },
+  titleText: {
+      color: 'white',
+      fontSize: 35,
+      fontWeight: 'bold',
+      paddingTop: 15,
+  },
+  descText: {
+      textAlign: 'center',
+      color: 'white',
+      fontSize: 20,
+      maxWidth: '90%',
+  },
+  pointsText: {
+      paddingTop: 30,
+      color: 'white',
+      fontSize: 20,
+  },
+  line: {
+      borderBottomColor: 'white',
+      borderWidth: 1,
+      width: 300,
+      margin: 10,
+  },
+  image: {
+      height: 60,
+      resizeMode: "contain",
+  }
+})
 
 export default Challenges;

@@ -195,9 +195,9 @@ export default class BoardScreen extends Component {
                 }
                 console.log(startPos, endPos);
                 if(startPos === endPos) {
-                    this.setState({moveAmount: null, finishedTurn: true});
                     sleep(1500).then(() => {
                         this.setModalVisible();
+                        this.setState({moveAmount: null, finishedTurn: true});
                     });
                 }
             });
@@ -395,14 +395,13 @@ export default class BoardScreen extends Component {
             return(
                 <Modal
                   animationType="fade"
-                  transparent={false}
+                  transparent={true}
                   visible={this.state.showChallengeModal}
                   onRequestClose={() => {
                     this.setModalVisible();
                   }}>
                   <View style={styles.modal}>
-                      <Text> Challenge comes here</Text>
-                      <Challenges teams={this.state.teams} handlePoints={{newTeams: (data) => this.updateTeams(data)}} />
+                    <Challenges curTeam={this.state.teamTurn} teams={this.state.teams} handlePoints={{newTeams: (data) => this.updateTeams(data)}} />
                   </View>
                 </Modal>
             )
@@ -421,8 +420,8 @@ export default class BoardScreen extends Component {
                 <Text style={{color: "white", fontSize: 52}}>{String.fromCharCode(this.state.faceValue)}</Text>
                 <NextTurn />
                 <MovePlayer />
-                <ChallengeModel />
             </View>
+                <ChallengeModel />
           </View>
       );
     }
@@ -475,5 +474,10 @@ const styles = StyleSheet.create({
       height: 15,
       borderRadius: 15/2,
       backgroundColor: 'red',
-  }
+  },
+  modal: {
+      backgroundColor: 'blue',
+      borderRadius: 15,
+      alignItems: 'center',
+  },
 });

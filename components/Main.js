@@ -1,19 +1,25 @@
 import React , { Component } from 'react';
-import { StyleSheet, Text, View, Button, Spacer } from 'react-native';
+import { StyleSheet, Text, View, Button, Spacer, Image } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import * as Expo from 'expo';
 
 export default class MainScreen extends Component {
     static navigationOptions = {
         title: "Het Henk Bier Spel",
+        header: null,
     }
     render(){
         const { navigate } = this.props.navigation
       return (
           <View style={styles.container}>
 
-            <Text style={styles.titleText}>Het Grote Henk Bier Spel</Text>
-
+            <Text style={styles.titleText}>Het Henk Bier Spel</Text>
+            <View style={styles.imageView}>
+            <Image
+                style={styles.image}
+                source={require('./HenkBig.png')}
+            />
+            </View>
             <View style={styles.buttonContainer}>
                 <View style={styles.buttons}>
                   <Button
@@ -46,10 +52,17 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   titleText: {
-      flex: 4,
+      flex: 2,
       color: 'white',
-      fontSize: 20,
+      fontSize: 40,
       fontWeight: 'bold',
-      paddingTop: 15,
+      paddingTop: 50,
+  },
+  imageView: {
+      flex: 3,
+  },
+  image: {
+      height: 125,
+      resizeMode: "contain",
   }
 });

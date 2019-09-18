@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9ffbb7a2-bc8c-41c8-9f9a-ed643ab4f75f" name="Default Changelist" comment="" />
+    <list default="true" id="9ffbb7a2-bc8c-41c8-9f9a-ed643ab4f75f" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/components/Board.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/Board.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Challenges.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/Challenges.js" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,8 +36,8 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -68,7 +71,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="260" y="20" width="1400" height="1000" extended-state="0" />
+    <frame x="260" y="20" width="1400" height="1000" extended-state="1" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
       <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.32966226" />
