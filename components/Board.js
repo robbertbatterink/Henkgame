@@ -5,6 +5,7 @@ import * as Expo from 'expo';
 import update from 'immutability-helper';
 import Dice from './Dice.js';
 import Challenges from './Challenges.js';
+import ScoreBoard from './ScoreBoard.js';
 
 export default class BoardScreen extends Component {
     constructor(props){
@@ -19,6 +20,7 @@ export default class BoardScreen extends Component {
             showDice: false,
             finishedTurn: false,
             showChallengeModal: false,
+            showScoreBoardModal: false,
             teams: [
                 {
                     id: 1,
@@ -193,7 +195,6 @@ export default class BoardScreen extends Component {
                 } else {
                     startPos  = startPos + 1;
                 }
-                console.log(startPos, endPos);
                 if(startPos === endPos) {
                     sleep(1500).then(() => {
                         this.setModalVisible();
@@ -244,6 +245,8 @@ export default class BoardScreen extends Component {
     }
 
     updateTeams(newTeams){
+        console.log('ik wordt geroepen');
+        console.log(newTeams);
         this.setState({teams: newTeams});
     }
 
@@ -398,10 +401,23 @@ export default class BoardScreen extends Component {
                   transparent={true}
                   visible={this.state.showChallengeModal}
                   onRequestClose={() => {
-                    this.setModalVisible();
                   }}>
                   <View style={styles.modal}>
-                    <Challenges curTeam={this.state.teamTurn} teams={this.state.teams} handlePoints={{newTeams: (data) => this.updateTeams(data)}} />
+                    <Challenges curTeam={this.state.teamTurn} teams={this.state.teams} close={{close: () => this.setModalVisible()}} handlePoints={{updateTeams: (data) => this.updateTeams(data)}} />
+                  </View>
+                </Modal>
+            )
+        }
+
+        const ScoreBoardModal = () => {
+            return(
+                <Modal
+                  animationType="fade"
+                  transparent={true}
+                  visible={this.state.showScoreBoardModal}
+                  onRequestClose={() => this.setState({showScoreBoardModal: !this.state.showScoreBoardModal})}>
+                  <View style={styles.modal}>
+                    <ScoreBoard teams={this.state.teams} />
                   </View>
                 </Modal>
             )
@@ -420,8 +436,15 @@ export default class BoardScreen extends Component {
                 <Text style={{color: "white", fontSize: 52}}>{String.fromCharCode(this.state.faceValue)}</Text>
                 <NextTurn />
                 <MovePlayer />
+                <View style={styles.buttons}>
+                <Button
+                    title="ScoreBoard"
+                    onPress={() => this.setState({showScoreBoardModal: !this.state.showScoreBoardModal})}
+                 />
+                 </View>
             </View>
                 <ChallengeModel />
+                <ScoreBoardModal />
           </View>
       );
     }
