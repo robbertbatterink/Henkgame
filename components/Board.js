@@ -1,11 +1,12 @@
 import React , { Component } from 'react';
-import { StyleSheet, Text, View, Button, Spacer, List, ListItem, Modal } from 'react-native';
+import { StyleSheet, Text, View, Button, Spacer, List, ListItem, Modal, ScrollView } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import * as Expo from 'expo';
 import update from 'immutability-helper';
 import Dice from './Dice.js';
 import Challenges from './Challenges.js';
 import ScoreBoard from './ScoreBoard.js';
+import { Col, Row, Grid } from "react-native-easy-grid";
 
 export default class BoardScreen extends Component {
     constructor(props){
@@ -53,11 +54,23 @@ export default class BoardScreen extends Component {
                     teamName: "Team 3",
                   },
               ],
+            // gameState: [
+            //     [],[],[],[],[],[],
+            //     [],[],[],[],
+            //     [],[],[],[],[],[],
+            //     [],[],[],[],
+            // ],
             gameState: [
-                [],[],[],[],[],[],
-                [],[],[],[],
-                [],[],[],[],[],[],
-                [],[],[],[],
+                [],[],[],[],[],[],[],[],[],[],[],[],[],[], //0,1,2,3,4,5,6,7,8,9,10,11,12,13
+                [],[],[],[], //14,15,16,17
+                [],[],[],[], //18,19,20,21
+                [],[],[],[],[],[],[],[],[],[], //22,23,24,25,26,27,28,29,30,31
+                [],[],[],[], //32,33,34,35
+                [],[],[],[],[], //36,37,38,39,40
+                [],[],[],[],[],[],[],[], //41,42,43,44,45,46,47,48
+                [],[],[],[],[],[], //49,50,51,52,52,53
+                [],[], //54,55
+                [],[],[],[],[],[],[],[],[],[],[], //56,57,58,59,60,61,62,63,64,65,66
             ],
         }
         this.updateGameState = this.updateGameState.bind(this);
@@ -280,77 +293,257 @@ export default class BoardScreen extends Component {
     }
     render(){
         const { navigate } = this.props.navigation
+        // const Board = () => {
+        //     return(
+        //         <View style={{maxHeight: 216}}>
+        //             <View style={{flexDirection: 'row'}}>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(5)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(6)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(7)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(8)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(9)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(10)}
+        //                 </View>
+        //             </View>
+        //             <View style={{alignContent: 'space-between', flexWrap:'wrap'}}>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(4)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(3)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(2)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(1)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(11)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(12)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(13)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(14)}
+        //                 </View>
+        //             </View>
+        //             <View style={{flexDirection: 'row'}}>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(0)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(19)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(18)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(17)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(16)}
+        //                 </View>
+        //                 <View style={styles.tile}>
+        //                     {this.renderPieces(15)}
+        //                 </View>
+        //             </View>
+        //             <Text style={{color: 'white'}}>Start</Text>
+        //         </View>
+        //     )
+        // }
         const Board = () => {
             return(
-                <View style={{maxHeight: 216}}>
-                    <View style={{flexDirection: 'row'}}>
-                        <View style={styles.tile}>
-                            {this.renderPieces(5)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(6)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(7)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(8)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(9)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(10)}
-                        </View>
-                    </View>
-                    <View style={{alignContent: 'space-between', flexWrap:'wrap'}}>
-                        <View style={styles.tile}>
-                            {this.renderPieces(4)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(3)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(2)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(1)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(11)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(12)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(13)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(14)}
-                        </View>
-                    </View>
-                    <View style={{flexDirection: 'row'}}>
-                        <View style={styles.tile}>
-                            {this.renderPieces(0)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(19)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(18)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(17)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(16)}
-                        </View>
-                        <View style={styles.tile}>
-                            {this.renderPieces(15)}
-                        </View>
-                    </View>
-                    <Text style={{color: 'white'}}>Start</Text>
-                </View>
+                <ScrollView
+                    horizontal={true}
+                >
+                <Grid>
+
+                    <Row style={{marginTop: 5}}>
+                        <Col id='1' style={styles.tile}><View>{this.renderPieces(0)}</View></Col>
+                        <Col id='2' style={styles.tile}><View>{this.renderPieces(1)}</View></Col>
+                        <Col id='3' style={styles.tile}><View>{this.renderPieces(2)}</View></Col>
+                        <Col id='4' style={styles.tile}><View>{this.renderPieces(3)}</View></Col>
+                        <Col id='5' style={styles.tile}><View>{this.renderPieces(4)}</View></Col>
+                        <Col id='6' style={styles.tile}><View>{this.renderPieces(5)}</View></Col>
+                        <Col id='7' style={styles.tile}><View>{this.renderPieces(6)}</View></Col>
+                        <Col id='8' style={styles.tile}><View>{this.renderPieces(7)}</View></Col>
+                        <Col id='9' style={styles.tile}><View>{this.renderPieces(8)}</View></Col>
+                        <Col id='10' style={styles.tile}><View>{this.renderPieces(9)}</View></Col>
+                        <Col id='11' style={styles.tile}><View>{this.renderPieces(10)}</View></Col>
+                        <Col id='12' style={styles.tile}><View>{this.renderPieces(11)}</View></Col>
+                        <Col id='13' style={styles.tile}><View>{this.renderPieces(12)}</View></Col>
+                        <Col id='14' style={styles.tile}><View>{this.renderPieces(13)}</View></Col>
+                    </Row>
+
+                    <Row style={{marginTop: 5}}>
+                        <Col id='1' style={styles.tile}><Text>38</Text></Col>
+                        <Col id='1' style={styles.nonTile}><Text>2</Text></Col>
+                        <Col id='1' style={styles.tile}><Text>4</Text></Col>
+                        <Col id='1' style={styles.nonTile}><Text>4</Text></Col>
+                        <Col id='1' style={styles.nonTile}><Text>5</Text></Col>
+                        <Col id='1' style={styles.nonTile}><Text>6</Text></Col>
+                        <Col id='1' style={styles.nonTile}><Text>7</Text></Col>
+                        <Col id='1' style={styles.nonTile}><Text>8</Text></Col>
+                        <Col id='1' style={styles.nonTile}><Text>9</Text></Col>
+                        <Col id='1' style={styles.nonTile}><Text>10</Text></Col>
+                        <Col id='1' style={styles.tile}><Text>12</Text></Col>
+                        <Col id='1' style={styles.nonTile}><Text>12</Text></Col>
+                        <Col id='1' style={styles.nonTile}><Text>13</Text></Col>
+                        <Col id='15' style={styles.tile}><View>{this.renderPieces(17)}</View></Col>
+                    </Row>
+
+                    <Row style={{marginTop: 5}}>
+                        <Col style={styles.tile}><Text>37</Text></Col>
+                        <Col style={styles.nonTile}><Text>2</Text></Col>
+                        <Col style={styles.tile}><Text>5</Text></Col>
+                        <Col style={styles.nonTile}><Text>4</Text></Col>
+                        <Col style={styles.nonTile}><Text>5</Text></Col>
+                        <Col style={styles.nonTile}><Text>6</Text></Col>
+                        <Col style={styles.nonTile}><Text>7</Text></Col>
+                        <Col style={styles.nonTile}><Text>8</Text></Col>
+                        <Col style={styles.nonTile}><Text>9</Text></Col>
+                        <Col style={styles.nonTile}><Text>10</Text></Col>
+                        <Col style={styles.tile}><Text>13</Text></Col>
+                        <Col style={styles.nonTile}><Text>12</Text></Col>
+                        <Col style={styles.nonTile}><Text>13</Text></Col>
+                        <Col id='16' style={styles.tile}><View>{this.renderPieces(21)}</View></Col>
+                    </Row>
+
+                    <Row style={{marginTop: 5}}>
+                        <Col style={styles.tile}><Text>36</Text></Col>
+                        <Col style={styles.nonTile}><Text>2</Text></Col>
+                        <Col style={styles.tile}><Text>6</Text></Col>
+                        <Col style={styles.tile}><Text>7</Text></Col>
+                        <Col style={styles.tile}><Text>8</Text></Col>
+                        <Col style={styles.tile}><Text>9</Text></Col>
+                        <Col style={styles.tile}><Text>10</Text></Col>
+                        <Col style={styles.tile}><Text>11</Text></Col>
+                        <Col style={styles.tile}><Text>12</Text></Col>
+                        <Col style={styles.nonTile}><Text>10</Text></Col>
+                        <Col style={styles.tile}><Text>14</Text></Col>
+                        <Col style={styles.nonTile}><Text>12</Text></Col>
+                        <Col style={styles.nonTile}><Text>13</Text></Col>
+                        <Col id='17' style={styles.tile}><View>{this.renderPieces(16)}</View></Col>
+                    </Row>
+
+                    <Row style={{marginTop: 5}}>
+                        <Col style={styles.tile}><Text>35</Text></Col>
+                        <Col style={styles.nonTile}><Text>2</Text></Col>
+                        <Col style={styles.nonTile}><Text>3</Text></Col>
+                        <Col style={styles.nonTile}><Text>4</Text></Col>
+                        <Col style={styles.nonTile}><Text>5</Text></Col>
+                        <Col style={styles.nonTile}><Text>6</Text></Col>
+                        <Col style={styles.nonTile}><Text>7</Text></Col>
+                        <Col style={styles.nonTile}><Text>8</Text></Col>
+                        <Col style={styles.tile}><Text>13</Text></Col>
+                        <Col style={styles.nonTile}><Text>10</Text></Col>
+                        <Col style={styles.tile}><Text>15</Text></Col>
+                        <Col style={styles.nonTile}><Text>12</Text></Col>
+                        <Col style={styles.nonTile}><Text>13</Text></Col>
+                        <Col id='18' style={styles.tile}><View>{this.renderPieces(17)}</View></Col>
+                    </Row>
+
+                    <Row style={{marginTop: 5}}>
+                        <Col style={styles.tile}><Text>34</Text></Col>
+                        <Col style={styles.nonTile}><Text>2</Text></Col>
+                        <Col style={styles.nonTile}><Text>3</Text></Col>
+                        <Col style={styles.nonTile}><Text>4</Text></Col>
+                        <Col style={styles.nonTile}><Text>5</Text></Col>
+                        <Col style={styles.nonTile}><Text>6</Text></Col>
+                        <Col style={styles.nonTile}><Text>7</Text></Col>
+                        <Col style={styles.nonTile}><Text>8</Text></Col>
+                        <Col style={styles.tile}><Text>14</Text></Col>
+                        <Col style={styles.tile}><Text>15</Text></Col>
+                        <Col style={styles.tile}><Text>16</Text></Col>
+                        <Col style={styles.nonTile}><Text>12</Text></Col>
+                        <Col style={styles.nonTile}><Text>13</Text></Col>
+                        <Col id='19' style={styles.tile}><View>{this.renderPieces(18)}</View></Col>
+                    </Row>
+
+                    <Row style={{marginTop: 5}}>
+                        <Col style={styles.tile}><Text>33</Text></Col>
+                        <Col style={styles.tile}><Text>32</Text></Col>
+                        <Col style={styles.tile}><Text>31</Text></Col>
+                        <Col style={styles.tile}><Text>30</Text></Col>
+                        <Col style={styles.tile}><Text>29</Text></Col>
+                        <Col style={styles.tile}><Text>28</Text></Col>
+                        <Col style={styles.nonTile}><Text>7</Text></Col>
+                        <Col style={styles.nonTile}><Text>8</Text></Col>
+                        <Col style={styles.nonTile}><Text>9</Text></Col>
+                        <Col style={styles.nonTile}><Text>10</Text></Col>
+                        <Col style={styles.tile}><Text>17</Text></Col>
+                        <Col style={styles.nonTile}><Text>12</Text></Col>
+                        <Col style={styles.nonTile}><Text>13</Text></Col>
+                        <Col id='20' style={styles.tile}><View>{this.renderPieces(19)}</View></Col>
+                    </Row>
+
+                    <Row style={{marginTop: 5}}>
+                        <Col style={styles.tile}><Text>32</Text></Col>
+                        <Col style={styles.nonTile}><Text>2</Text></Col>
+                        <Col style={styles.nonTile}><Text>3</Text></Col>
+                        <Col style={styles.nonTile}><Text>4</Text></Col>
+                        <Col style={styles.nonTile}><Text>5</Text></Col>
+                        <Col style={styles.tile}><Text>27</Text></Col>
+                        <Col style={styles.nonTile}><Text>7</Text></Col>
+                        <Col style={styles.nonTile}><Text>8</Text></Col>
+                        <Col style={styles.nonTile}><Text>9</Text></Col>
+                        <Col style={styles.nonTile}><Text>10</Text></Col>
+                        <Col id='' style={styles.tile}><Text>18</Text></Col>
+                        <Col id='23' style={styles.tile}><View>{this.renderPieces(22)}</View></Col>
+                        <Col id='22' style={styles.tile}><View>{this.renderPieces(21)}</View></Col>
+                        <Col id='21' style={styles.tile}><View>{this.renderPieces(20)}</View></Col>
+                    </Row>
+
+                    <Row style={{marginTop: 5}}>
+                        <Col style={styles.tile}><Text>31</Text></Col>
+                        <Col style={styles.nonTile}><Text>2</Text></Col>
+                        <Col style={styles.nonTile}><Text>3</Text></Col>
+                        <Col style={styles.nonTile}><Text>4</Text></Col>
+                        <Col style={styles.nonTile}><Text>5</Text></Col>
+                        <Col style={styles.tile}><Text>26</Text></Col>
+                        <Col style={styles.nonTile}><Text>7</Text></Col>
+                        <Col style={styles.nonTile}><Text>8</Text></Col>
+                        <Col style={styles.nonTile}><Text>9</Text></Col>
+                        <Col style={styles.nonTile}><Text>10</Text></Col>
+                        <Col style={styles.tile}><Text>19</Text></Col>
+                        <Col style={styles.nonTile}><Text>12</Text></Col>
+                        <Col style={styles.nonTile}><Text>13</Text></Col>
+                        <Col style={styles.nonTile}><Text>14</Text></Col>
+                    </Row>
+
+                    <Row style={{marginTop: 5}}>
+                        <Col style={styles.tile}><Text>30</Text></Col>
+                        <Col style={styles.tile}><Text>29</Text></Col>
+                        <Col style={styles.tile}><Text>28</Text></Col>
+                        <Col style={styles.tile}><Text>27</Text></Col>
+                        <Col style={styles.tile}><Text>26</Text></Col>
+                        <Col style={styles.tile}><Text>25</Text></Col>
+                        <Col style={styles.tile}><Text>24</Text></Col>
+                        <Col style={styles.tile}><Text>23</Text></Col>
+                        <Col style={styles.tile}><Text>22</Text></Col>
+                        <Col style={styles.tile}><Text>21</Text></Col>
+                        <Col style={styles.tile}><Text>20</Text></Col>
+                        <Col style={styles.nonTile}><Text>12</Text></Col>
+                        <Col style={styles.nonTile}><Text>13</Text></Col>
+                        <Col style={styles.nonTile}><Text>14</Text></Col>
+                    </Row>
+                </Grid>
+                </ScrollView>
             )
         }
 
@@ -417,7 +610,7 @@ export default class BoardScreen extends Component {
                   visible={this.state.showScoreBoardModal}
                   onRequestClose={() => this.setState({showScoreBoardModal: !this.state.showScoreBoardModal})}>
                   <View style={styles.modal}>
-                    <ScoreBoard teams={this.state.teams} />
+                    <ScoreBoard teams={this.state.teams} close={{close: () => this.setState({showScoreBoardModal: !this.state.showScoreBoardModal})}} />
                   </View>
                 </Modal>
             )
@@ -457,7 +650,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   board: {
-      flex: 4,
+      flex: 8,
       paddingTop: 15,
   },
   buttons: {
@@ -479,6 +672,15 @@ const styles = StyleSheet.create({
       margin: 2,
       padding: 5,
       backgroundColor: 'white',
+      height: 50,
+      width: 50,
+      borderRadius: 15,
+      overflow: 'hidden',
+  },
+  nonTile: {
+      margin: 2,
+      padding: 5,
+      backgroundColor: 'black',
       height: 50,
       width: 50,
       borderRadius: 15,

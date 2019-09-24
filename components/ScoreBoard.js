@@ -1,6 +1,7 @@
 import React , { Component } from 'react';
 import { StyleSheet, Text, View, Button, Modal, Alert, ScrollView, TextInput, Image } from 'react-native';
 import update from 'immutability-helper';
+import Leaderboard from 'react-native-leaderboard';
 
 class ScoreBoard extends Component {
     constructor(props){
@@ -38,28 +39,24 @@ class ScoreBoard extends Component {
 
     }
 
-    renderRow() {
-        return (
-            <View style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'row' }}>
-                <View style={{ flex: 1, alignSelf: 'stretch' }} /> { /* Edit these as they are your cells. You may even take parameters to display different data / react elements etc. */}
-                <View style={{ flex: 1, alignSelf: 'stretch' }} />
-                <View style={{ flex: 1, alignSelf: 'stretch' }} />
-                <View style={{ flex: 1, alignSelf: 'stretch' }} />
-                <View style={{ flex: 1, alignSelf: 'stretch' }} />
-            </View>
-        );
-    }
-
     render(){
 
         const ScoreTable = () => {
 
             const data = this.props.teams;
+            const i = 1;
+
+            data.sort(function(a,b) {
+                return parseInt(b.points) - parseInt(a.points)
+            })
+            console.log(data);
             return (
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 {
-                    data.map((team) => { // This will render a row for each data element.
-                        return <Text>{team['teamName']} with {team['points']} points</Text>
+                    data.map((team, i) => { // This will render a row for each data element.
+                        return <View key={team['id']}>
+                                    <Text> {i+1}. {team['teamName']} met {team['points']} punten</Text>
+                                </View>
                     })
                 }
                 </View>
@@ -68,8 +65,13 @@ class ScoreBoard extends Component {
 
         return (
             <View style={styles.container}>
+                <Text style={styles.titleText}>ScoreBoard</Text>
+                <Leaderboard
+                    data={this.state.teams}
+                    sortBy='points'
+                    labelBy='teamName'
+                />
                 <View style={styles.buttons}>
-                <ScoreTable />
                 <Button
                     title="Close"
                     onPress={() => this.handler()}
