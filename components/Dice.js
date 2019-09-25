@@ -44,7 +44,7 @@ class Dice extends Component {
 
   sendFaceValue(){
       //this.props.throwDice.moveAmount([this.state.faceValue + 1, this.state.face]);
-      this.props.throwDice.moveAmount([1, this.state.face]);
+      this.props.throwDice.moveAmount([6, this.state.face]);
   }
 
   render() {

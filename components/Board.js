@@ -61,16 +61,14 @@ export default class BoardScreen extends Component {
             //     [],[],[],[],
             // ],
             gameState: [
-                [],[],[],[],[],[],[],[],[],[],[],[],[],[], //0,1,2,3,4,5,6,7,8,9,10,11,12,13
-                [],[],[],[], //14,15,16,17
-                [],[],[],[], //18,19,20,21
-                [],[],[],[],[],[],[],[],[],[], //22,23,24,25,26,27,28,29,30,31
-                [],[],[],[], //32,33,34,35
-                [],[],[],[],[], //36,37,38,39,40
-                [],[],[],[],[],[],[],[], //41,42,43,44,45,46,47,48
-                [],[],[],[],[],[], //49,50,51,52,52,53
-                [],[], //54,55
-                [],[],[],[],[],[],[],[],[],[],[], //56,57,58,59,60,61,62,63,64,65,66
+                [],[],[], //0,1,2
+                [],[],[],[],[],[],[],[],//3,4,5,6,7,8,9,10
+                [],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[], //11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30
+                [],[],[],[],[],[],[],[],//31,32,33,34,35,36,37,38
+                [],[],[],[],[],[],[],[],[],[],[],[],[],[], //39,40,41,42,43,44,45,46,47,48,49,50,51,52
+                [],[],[],[], //53,54,55,56
+                [],[],[],[],[],[],[], //57,58,59,60,61,62,63
+                [],[],[],[],[], //64,65,66,67,68
             ],
         }
         this.updateGameState = this.updateGameState.bind(this);
@@ -137,8 +135,8 @@ export default class BoardScreen extends Component {
             return c.id === id;
         })
 
-        if(newPos > 19){
-            var pos = newPos - 20;
+        if(newPos > 68){
+            var pos = newPos - 69;
         } else {
             var pos = newPos;
         }
@@ -188,25 +186,37 @@ export default class BoardScreen extends Component {
     }
 
     movePiece(teamId, curPos, newPos, moves) {
-        if(newPos > 19){
-            var endPos = newPos - 20;
-        } else {
+        if(newPos > 69){
+            var endPos = newPos - 69;
+        } else if(curPos <= 38 && newPos > 38){
+            var endPos = newPos + 25;
+        }else {
             var endPos = newPos;
         }
         var id = teamId;
+        console.log(endPos);
         var startPos = curPos;
         var moveAmount = moves;
         var sleepAmount = 0;
+        var endPoss = curPos + 1;
         const sleep = (milliseconds) => {
                 return new Promise(resolve => setTimeout(resolve, milliseconds))
         }
         for(let i = 0; i < moveAmount; i++){
             sleep(sleepAmount).then(() => {
-                this.updateGameState(id, startPos, startPos + 1);
-                if(startPos >= 19){
-                    startPos  = startPos  - 19;
+                this.updateGameState(id, startPos, endPoss);
+                if(startPos >= 68){
+                    startPos  = startPos  - 68;
+                    endPoss= startPos + 1
+                }else if(startPos == 37){
+                    startPos = startPos + 1;
+                    endPoss = startPos +26;
+                } else if(startPos == 38){
+                    startPos = startPos + 26;
+                    endPoss = startPos +1;
                 } else {
                     startPos  = startPos + 1;
+                    endPoss = startPos + 1;
                 }
                 if(startPos === endPos) {
                     sleep(1500).then(() => {
@@ -220,8 +230,9 @@ export default class BoardScreen extends Component {
     }
 
     addPiece(teamId, newPos){
-        if(newPos > 19){
-            var pos = newPos - 20;
+        console.log(newPos)
+        if(newPos > 68){
+            var pos = newPos - 69;
         } else {
             var pos = newPos;
         }
@@ -391,9 +402,9 @@ export default class BoardScreen extends Component {
                     </Row>
 
                     <Row style={{marginTop: 5}}>
-                        <Col id='1' style={styles.tile}><Text>38</Text></Col>
+                        <Col id='69' style={styles.tile}><View>{this.renderPieces(68)}</View></Col>
                         <Col id='1' style={styles.nonTile}><Text>2</Text></Col>
-                        <Col id='1' style={styles.tile}><Text>4</Text></Col>
+                        <Col id='40' style={styles.tile}><View>{this.renderPieces(39)}</View></Col>
                         <Col id='1' style={styles.nonTile}><Text>4</Text></Col>
                         <Col id='1' style={styles.nonTile}><Text>5</Text></Col>
                         <Col id='1' style={styles.nonTile}><Text>6</Text></Col>
@@ -401,16 +412,16 @@ export default class BoardScreen extends Component {
                         <Col id='1' style={styles.nonTile}><Text>8</Text></Col>
                         <Col id='1' style={styles.nonTile}><Text>9</Text></Col>
                         <Col id='1' style={styles.nonTile}><Text>10</Text></Col>
-                        <Col id='1' style={styles.tile}><Text>12</Text></Col>
+                        <Col id='54' style={styles.tile}><View>{this.renderPieces(53)}</View></Col>
                         <Col id='1' style={styles.nonTile}><Text>12</Text></Col>
                         <Col id='1' style={styles.nonTile}><Text>13</Text></Col>
-                        <Col id='15' style={styles.tile}><View>{this.renderPieces(17)}</View></Col>
+                        <Col id='15' style={styles.tile}><View>{this.renderPieces(14)}</View></Col>
                     </Row>
 
                     <Row style={{marginTop: 5}}>
-                        <Col style={styles.tile}><Text>37</Text></Col>
+                        <Col id='68' style={styles.tile}><View>{this.renderPieces(67)}</View></Col>
                         <Col style={styles.nonTile}><Text>2</Text></Col>
-                        <Col style={styles.tile}><Text>5</Text></Col>
+                        <Col id='41' style={styles.tile}><View>{this.renderPieces(40)}</View></Col>
                         <Col style={styles.nonTile}><Text>4</Text></Col>
                         <Col style={styles.nonTile}><Text>5</Text></Col>
                         <Col style={styles.nonTile}><Text>6</Text></Col>
@@ -418,31 +429,31 @@ export default class BoardScreen extends Component {
                         <Col style={styles.nonTile}><Text>8</Text></Col>
                         <Col style={styles.nonTile}><Text>9</Text></Col>
                         <Col style={styles.nonTile}><Text>10</Text></Col>
-                        <Col style={styles.tile}><Text>13</Text></Col>
+                        <Col id='55' style={styles.tile}><View>{this.renderPieces(54)}</View></Col>
                         <Col style={styles.nonTile}><Text>12</Text></Col>
                         <Col style={styles.nonTile}><Text>13</Text></Col>
-                        <Col id='16' style={styles.tile}><View>{this.renderPieces(21)}</View></Col>
+                        <Col id='16' style={styles.tile}><View>{this.renderPieces(15)}</View></Col>
                     </Row>
 
                     <Row style={{marginTop: 5}}>
-                        <Col style={styles.tile}><Text>36</Text></Col>
+                        <Col id='67' style={styles.tile}><View>{this.renderPieces(66)}</View></Col>
                         <Col style={styles.nonTile}><Text>2</Text></Col>
-                        <Col style={styles.tile}><Text>6</Text></Col>
-                        <Col style={styles.tile}><Text>7</Text></Col>
-                        <Col style={styles.tile}><Text>8</Text></Col>
-                        <Col style={styles.tile}><Text>9</Text></Col>
-                        <Col style={styles.tile}><Text>10</Text></Col>
-                        <Col style={styles.tile}><Text>11</Text></Col>
-                        <Col style={styles.tile}><Text>12</Text></Col>
+                        <Col id='42' style={styles.tile}><View>{this.renderPieces(41)}</View></Col>
+                        <Col id='43' style={styles.tile}><View>{this.renderPieces(42)}</View></Col>
+                        <Col id='44' style={styles.tile}><View>{this.renderPieces(43)}</View></Col>
+                        <Col id='45' style={styles.tile}><View>{this.renderPieces(44)}</View></Col>
+                        <Col id='46' style={styles.tile}><View>{this.renderPieces(45)}</View></Col>
+                        <Col id='47' style={styles.tile}><View>{this.renderPieces(46)}</View></Col>
+                        <Col id='48' style={styles.tile}><View>{this.renderPieces(47)}</View></Col>
                         <Col style={styles.nonTile}><Text>10</Text></Col>
-                        <Col style={styles.tile}><Text>14</Text></Col>
+                        <Col id='56' style={styles.tile}><View>{this.renderPieces(55)}</View></Col>
                         <Col style={styles.nonTile}><Text>12</Text></Col>
                         <Col style={styles.nonTile}><Text>13</Text></Col>
                         <Col id='17' style={styles.tile}><View>{this.renderPieces(16)}</View></Col>
                     </Row>
 
                     <Row style={{marginTop: 5}}>
-                        <Col style={styles.tile}><Text>35</Text></Col>
+                        <Col id='66' style={styles.tile}><View>{this.renderPieces(65)}</View></Col>
                         <Col style={styles.nonTile}><Text>2</Text></Col>
                         <Col style={styles.nonTile}><Text>3</Text></Col>
                         <Col style={styles.nonTile}><Text>4</Text></Col>
@@ -450,16 +461,16 @@ export default class BoardScreen extends Component {
                         <Col style={styles.nonTile}><Text>6</Text></Col>
                         <Col style={styles.nonTile}><Text>7</Text></Col>
                         <Col style={styles.nonTile}><Text>8</Text></Col>
-                        <Col style={styles.tile}><Text>13</Text></Col>
+                        <Col id='49' style={styles.tile}><View>{this.renderPieces(48)}</View></Col>
                         <Col style={styles.nonTile}><Text>10</Text></Col>
-                        <Col style={styles.tile}><Text>15</Text></Col>
+                        <Col id='57' style={styles.tile}><View>{this.renderPieces(56)}</View></Col>
                         <Col style={styles.nonTile}><Text>12</Text></Col>
                         <Col style={styles.nonTile}><Text>13</Text></Col>
                         <Col id='18' style={styles.tile}><View>{this.renderPieces(17)}</View></Col>
                     </Row>
 
                     <Row style={{marginTop: 5}}>
-                        <Col style={styles.tile}><Text>34</Text></Col>
+                        <Col id='65' style={styles.tile}><View>{this.renderPieces(64)}</View></Col>
                         <Col style={styles.nonTile}><Text>2</Text></Col>
                         <Col style={styles.nonTile}><Text>3</Text></Col>
                         <Col style={styles.nonTile}><Text>4</Text></Col>
@@ -467,77 +478,77 @@ export default class BoardScreen extends Component {
                         <Col style={styles.nonTile}><Text>6</Text></Col>
                         <Col style={styles.nonTile}><Text>7</Text></Col>
                         <Col style={styles.nonTile}><Text>8</Text></Col>
-                        <Col style={styles.tile}><Text>14</Text></Col>
-                        <Col style={styles.tile}><Text>15</Text></Col>
-                        <Col style={styles.tile}><Text>16</Text></Col>
+                        <Col id='50' style={styles.tile}><View>{this.renderPieces(49)}</View></Col>
+                        <Col id='51' style={styles.tile}><View>{this.renderPieces(50)}</View></Col>
+                        <Col id='52' style={styles.tile}><View>{this.renderPieces(51)}</View></Col>
                         <Col style={styles.nonTile}><Text>12</Text></Col>
                         <Col style={styles.nonTile}><Text>13</Text></Col>
                         <Col id='19' style={styles.tile}><View>{this.renderPieces(18)}</View></Col>
                     </Row>
 
                     <Row style={{marginTop: 5}}>
-                        <Col style={styles.tile}><Text>33</Text></Col>
-                        <Col style={styles.tile}><Text>32</Text></Col>
-                        <Col style={styles.tile}><Text>31</Text></Col>
-                        <Col style={styles.tile}><Text>30</Text></Col>
-                        <Col style={styles.tile}><Text>29</Text></Col>
-                        <Col style={styles.tile}><Text>28</Text></Col>
+                        <Col id='39' style={styles.tile}><View>{this.renderPieces(38)}</View></Col>
+                        <Col id='64' style={styles.tile}><View>{this.renderPieces(63)}</View></Col>
+                        <Col id='63' style={styles.tile}><View>{this.renderPieces(62)}</View></Col>
+                        <Col id='62' style={styles.tile}><View>{this.renderPieces(61)}</View></Col>
+                        <Col id='61'  style={styles.tile}><View>{this.renderPieces(60)}</View></Col>
+                        <Col id='60' style={styles.tile}><View>{this.renderPieces(59)}</View></Col>
                         <Col style={styles.nonTile}><Text>7</Text></Col>
                         <Col style={styles.nonTile}><Text>8</Text></Col>
                         <Col style={styles.nonTile}><Text>9</Text></Col>
                         <Col style={styles.nonTile}><Text>10</Text></Col>
-                        <Col style={styles.tile}><Text>17</Text></Col>
+                        <Col id='53' style={styles.tile}><View>{this.renderPieces(52)}</View></Col>
                         <Col style={styles.nonTile}><Text>12</Text></Col>
                         <Col style={styles.nonTile}><Text>13</Text></Col>
                         <Col id='20' style={styles.tile}><View>{this.renderPieces(19)}</View></Col>
                     </Row>
 
                     <Row style={{marginTop: 5}}>
-                        <Col style={styles.tile}><Text>32</Text></Col>
+                        <Col id='38' style={styles.tile}><View>{this.renderPieces(37)}</View></Col>
                         <Col style={styles.nonTile}><Text>2</Text></Col>
                         <Col style={styles.nonTile}><Text>3</Text></Col>
                         <Col style={styles.nonTile}><Text>4</Text></Col>
                         <Col style={styles.nonTile}><Text>5</Text></Col>
-                        <Col style={styles.tile}><Text>27</Text></Col>
+                        <Col id='59' style={styles.tile}><View>{this.renderPieces(58)}</View></Col>
                         <Col style={styles.nonTile}><Text>7</Text></Col>
                         <Col style={styles.nonTile}><Text>8</Text></Col>
                         <Col style={styles.nonTile}><Text>9</Text></Col>
                         <Col style={styles.nonTile}><Text>10</Text></Col>
-                        <Col id='' style={styles.tile}><Text>18</Text></Col>
+                        <Col id='24' style={styles.tile}><View>{this.renderPieces(23)}</View></Col>
                         <Col id='23' style={styles.tile}><View>{this.renderPieces(22)}</View></Col>
                         <Col id='22' style={styles.tile}><View>{this.renderPieces(21)}</View></Col>
                         <Col id='21' style={styles.tile}><View>{this.renderPieces(20)}</View></Col>
                     </Row>
 
                     <Row style={{marginTop: 5}}>
-                        <Col style={styles.tile}><Text>31</Text></Col>
+                        <Col id='37' style={styles.tile}><View>{this.renderPieces(36)}</View></Col>
                         <Col style={styles.nonTile}><Text>2</Text></Col>
                         <Col style={styles.nonTile}><Text>3</Text></Col>
                         <Col style={styles.nonTile}><Text>4</Text></Col>
                         <Col style={styles.nonTile}><Text>5</Text></Col>
-                        <Col style={styles.tile}><Text>26</Text></Col>
+                        <Col id='58' style={styles.tile}><View>{this.renderPieces(57)}</View></Col>
                         <Col style={styles.nonTile}><Text>7</Text></Col>
                         <Col style={styles.nonTile}><Text>8</Text></Col>
                         <Col style={styles.nonTile}><Text>9</Text></Col>
                         <Col style={styles.nonTile}><Text>10</Text></Col>
-                        <Col style={styles.tile}><Text>19</Text></Col>
+                        <Col id='25' style={styles.tile}><View>{this.renderPieces(24)}</View></Col>
                         <Col style={styles.nonTile}><Text>12</Text></Col>
                         <Col style={styles.nonTile}><Text>13</Text></Col>
                         <Col style={styles.nonTile}><Text>14</Text></Col>
                     </Row>
 
                     <Row style={{marginTop: 5}}>
-                        <Col style={styles.tile}><Text>30</Text></Col>
-                        <Col style={styles.tile}><Text>29</Text></Col>
-                        <Col style={styles.tile}><Text>28</Text></Col>
-                        <Col style={styles.tile}><Text>27</Text></Col>
-                        <Col style={styles.tile}><Text>26</Text></Col>
-                        <Col style={styles.tile}><Text>25</Text></Col>
-                        <Col style={styles.tile}><Text>24</Text></Col>
-                        <Col style={styles.tile}><Text>23</Text></Col>
-                        <Col style={styles.tile}><Text>22</Text></Col>
-                        <Col style={styles.tile}><Text>21</Text></Col>
-                        <Col style={styles.tile}><Text>20</Text></Col>
+                        <Col id='36' style={styles.tile}><View>{this.renderPieces(35)}</View></Col>
+                        <Col id='35' style={styles.tile}><View>{this.renderPieces(34)}</View></Col>
+                        <Col id='34' style={styles.tile}><View>{this.renderPieces(33)}</View></Col>
+                        <Col id='33' style={styles.tile}><View>{this.renderPieces(32)}</View></Col>
+                        <Col id='32' style={styles.tile}><View>{this.renderPieces(31)}</View></Col>
+                        <Col id='31' style={styles.tile}><View>{this.renderPieces(30)}</View></Col>
+                        <Col id='30' style={styles.tile}><View>{this.renderPieces(29)}</View></Col>
+                        <Col id='29' style={styles.tile}><View>{this.renderPieces(28)}</View></Col>
+                        <Col id='28' style={styles.tile}><View>{this.renderPieces(27)}</View></Col>
+                        <Col id='27' style={styles.tile}><View>{this.renderPieces(26)}</View></Col>
+                        <Col id='26' style={styles.tile}><View>{this.renderPieces(25)}</View></Col>
                         <Col style={styles.nonTile}><Text>12</Text></Col>
                         <Col style={styles.nonTile}><Text>13</Text></Col>
                         <Col style={styles.nonTile}><Text>14</Text></Col>
