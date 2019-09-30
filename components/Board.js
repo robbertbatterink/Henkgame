@@ -1,5 +1,5 @@
 import React , { Component } from 'react';
-import { StyleSheet, Text, View, Button, Spacer, List, ListItem, Modal, ScrollView } from 'react-native';
+import { Alert, StyleSheet, Text, View, Button, Spacer, List, ListItem, Modal, ScrollView } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import * as Expo from 'expo';
 import update from 'immutability-helper';
@@ -61,14 +61,14 @@ export default class BoardScreen extends Component {
             //     [],[],[],[],
             // ],
             gameState: [
-                [],[],[], //0,1,2
-                [],[],[],[],[],[],[],[],//3,4,5,6,7,8,9,10
-                [],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[], //11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30
-                [],[],[],[],[],[],[],[],//31,32,33,34,35,36,37,38
-                [],[],[],[],[],[],[],[],[],[],[],[],[],[], //39,40,41,42,43,44,45,46,47,48,49,50,51,52
-                [],[],[],[], //53,54,55,56
-                [],[],[],[],[],[],[], //57,58,59,60,61,62,63
-                [],[],[],[],[], //64,65,66,67,68
+                [],[],[], //0,1,2 //to first intersection
+                [],[],[],[],[],[],[],[],//3,4,5,6,7,8,9,10 // going straight from first intersection to second intersection
+                [],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[], //11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30 //going straight from second intersection to third intersection
+                [],[],[],[],[],[],[],[],//31,32,33,34,35,36,37,38 //going straight from third intersection to final stretch
+                [],[],[],[],[],[],[],[],[],[],[],[],[],[], //39,40,41,42,43,44,45,46,47,48,49,50,51,52 // going down from first itersection
+                [],[],[],[], //53,54,55,56 // going down from second intersection
+                [],[],[],[],[],[],[], //57,58,59,60,61,62,63 // going up on third intersection to final stretch
+                [],[],[],[],[], //64,65,66,67,68 // final stretch
             ],
         }
         this.updateGameState = this.updateGameState.bind(this);
@@ -186,51 +186,86 @@ export default class BoardScreen extends Component {
     }
 
     movePiece(teamId, curPos, newPos, moves) {
-        if(newPos > 69){
-            var endPos = newPos - 69;
-        } else if(curPos <= 38 && newPos > 38){
-            var endPos = newPos + 25;
-        }else {
-            var endPos = newPos;
-        }
         var id = teamId;
-        console.log(endPos);
         var startPos = curPos;
         var moveAmount = moves;
         var sleepAmount = 0;
-        var endPoss = curPos + 1;
+        var endPoss = curPos +1;
+
+        console.log('newPos');
+        console.log(newPos);
+        if(newPos > 68){
+            var endPos = newPos - 68;
+        } else if(curPos == 2 && newPos > 38){
+            var endPos = newPos;
+        }else if(curPos <= 38 && newPos > 38){
+            var endPos = newPos + 24;
+        }else if(curPos == 58 && newPos > 63){
+            var endPos = newPos -1;
+        }else if(curPos >= 59 && curPos <= 63 && newPos > 63){
+            var endPos = newPos -2;
+        }else {
+            var endPos = newPos;
+        }
+
+        console.log('endPos');
+        console.log(endPos);
         const sleep = (milliseconds) => {
                 return new Promise(resolve => setTimeout(resolve, milliseconds))
         }
+        let atIntersection = false;
         for(let i = 0; i < moveAmount; i++){
-            sleep(sleepAmount).then(() => {
-                this.updateGameState(id, startPos, endPoss);
-                if(startPos >= 68){
-                    startPos  = startPos  - 68;
-                    endPoss= startPos + 1
-                }else if(startPos == 37){
-                    startPos = startPos + 1;
-                    endPoss = startPos +26;
-                } else if(startPos == 38){
-                    startPos = startPos + 26;
-                    endPoss = startPos +1;
-                } else {
-                    startPos  = startPos + 1;
-                    endPoss = startPos + 1;
+                sleep(sleepAmount).then(() => {
+                    if(!atIntersection){
+                    if(startPos == 68){
+                        endPoss= 0;
+                    }else if(startPos == 2){
+                        atIntersection = true;
+                        Alert.alert(
+                          'Een kruising',
+                          'Kies een richting voor welke weg je wilt volgen',
+                          [
+                            {text: 'Rechts', onPress: () => {this.updateGameState(id, 2, 3); this.movePiece(id, 3, 4, moveAmount-i-1); atIntersection = false}},
+                            {text: 'Beneden', onPress: () => {this.updateGameState(id, 2, 39); this.movePiece(id, 39, 40, moveAmount-i-1); atIntersection = false;}},
+                          ],
+                          {cancelable: false},
+                        );
+                    }else if(startPos == 30){
+                        atIntersection = true;
+                        Alert.alert(
+                          'Een kruising',
+                          'Kies een richting voor welke weg je wilt volgen',
+                          [
+                            {text: 'Links', onPress: () => {this.updateGameState(id, 30, 31); this.movePiece(id, 31, 32, moveAmount-i-1); atIntersection = false}},
+                            {text: 'Boven', onPress: () => {this.updateGameState(id, 30, 57); this.movePiece(id, 57, 58, moveAmount-i-1); atIntersection = false;}},
+                          ],
+                          {cancelable: false},
+                        );
+                    }else if(startPos == 63){
+                        endPoss = 38;
+                    }else if(startPos == 38){
+                         startPos = 38;
+                         endPoss = 64;
+                    } else {
+                        endPoss = startPos + 1;
+                    }
+                    console.log('check')
+                    console.log(startPos, endPos);
+                    if(startPos === endPos) {
+                        sleep(1500).then(() => {
+                            this.setModalVisible();
+                            this.setState({moveAmount: null, finishedTurn: true});
+                        });
+                    }
+                    }
+                    this.updateGameState(id, startPos, endPoss);
+                    startPos = endPoss;
+                });
+                sleepAmount = sleepAmount + 500;
                 }
-                if(startPos === endPos) {
-                    sleep(1500).then(() => {
-                        this.setModalVisible();
-                        this.setState({moveAmount: null, finishedTurn: true});
-                    });
-                }
-            });
-            sleepAmount = sleepAmount + 1000;
-        }
     }
 
     addPiece(teamId, newPos){
-        console.log(newPos)
         if(newPos > 68){
             var pos = newPos - 69;
         } else {
@@ -269,8 +304,6 @@ export default class BoardScreen extends Component {
     }
 
     updateTeams(newTeams){
-        console.log('ik wordt geroepen');
-        console.log(newTeams);
         this.setState({teams: newTeams});
     }
 

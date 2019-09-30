@@ -41,7 +41,7 @@ export default class TeamScreen extends Component {
         const teamId = teamsSize + 1;
         const newTeamName = "Team " + teamId;
         this.setState(state => {
-            const teams = [...state.teams, {players: ['Player 1',], teamName: newTeamName, id:teamId, position: 35, playerTurn: null, points: 0}];
+            const teams = [...state.teams, {players: ['Player 1',], teamName: newTeamName, id:teamId, position: 65, playerTurn: null, points: 0}];
 
           return {
                 teams
