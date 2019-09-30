@@ -1,5 +1,5 @@
 import React , { Component } from 'react';
-import { Alert, StyleSheet, Text, View, Button, Spacer, List, ListItem, Modal, ScrollView } from 'react-native';
+import { Alert, StyleSheet, Text, View, Button, Spacer, List, ListItem, Modal, ScrollView, Image } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import * as Expo from 'expo';
 import update from 'immutability-helper';
@@ -22,6 +22,7 @@ export default class BoardScreen extends Component {
             finishedTurn: false,
             showChallengeModal: false,
             showScoreBoardModal: false,
+            showIntersectionModal: false,
             teams: [
                 {
                     id: 1,
@@ -81,6 +82,7 @@ export default class BoardScreen extends Component {
         this.movePiece = this.movePiece.bind(this);
         this.setModalVisible = this.setModalVisible.bind(this);
         this.updateTeams = this.updateTeams.bind(this);
+        this.interAmount = this.interAmount.bind(this);
     }
     static navigationOptions = {
         header: null,
@@ -129,6 +131,7 @@ export default class BoardScreen extends Component {
     }
 
     updateTeamPosition(id, newPos){
+        console.log(newPos);
         var data=this.state.teams
 
         var teamIndex = data.findIndex(function(c) {
@@ -185,84 +188,80 @@ export default class BoardScreen extends Component {
         //)
     }
 
-    movePiece(teamId, curPos, newPos, moves) {
-        var id = teamId;
-        var startPos = curPos;
-        var moveAmount = moves;
-        var sleepAmount = 0;
-        var endPoss = curPos +1;
-
-        console.log('newPos');
-        console.log(newPos);
-        if(newPos > 68){
-            var endPos = newPos - 68;
-        } else if(curPos == 2 && newPos > 38){
-            var endPos = newPos;
-        }else if(curPos <= 38 && newPos > 38){
-            var endPos = newPos + 24;
-        }else if(curPos == 58 && newPos > 63){
-            var endPos = newPos -1;
-        }else if(curPos >= 59 && curPos <= 63 && newPos > 63){
-            var endPos = newPos -2;
-        }else {
-            var endPos = newPos;
-        }
-
-        console.log('endPos');
-        console.log(endPos);
+    movePiece(teamId, curPos, moves) {
         const sleep = (milliseconds) => {
                 return new Promise(resolve => setTimeout(resolve, milliseconds))
         }
+        //positions something special happens 2 , 10, 30, 38, 52, 56, 63, 68
+        var id = teamId;
+        var startPos = curPos;
+        var interPos = curPos;
+        var moveAmount = moves;
         let atIntersection = false;
-        for(let i = 0; i < moveAmount; i++){
-                sleep(sleepAmount).then(() => {
-                    if(!atIntersection){
-                    if(startPos == 68){
-                        endPoss= 0;
-                    }else if(startPos == 2){
-                        atIntersection = true;
-                        Alert.alert(
-                          'Een kruising',
-                          'Kies een richting voor welke weg je wilt volgen',
-                          [
-                            {text: 'Rechts', onPress: () => {this.updateGameState(id, 2, 3); this.movePiece(id, 3, 4, moveAmount-i-1); atIntersection = false}},
-                            {text: 'Beneden', onPress: () => {this.updateGameState(id, 2, 39); this.movePiece(id, 39, 40, moveAmount-i-1); atIntersection = false;}},
-                          ],
-                          {cancelable: false},
-                        );
-                    }else if(startPos == 30){
-                        atIntersection = true;
-                        Alert.alert(
-                          'Een kruising',
-                          'Kies een richting voor welke weg je wilt volgen',
-                          [
-                            {text: 'Links', onPress: () => {this.updateGameState(id, 30, 31); this.movePiece(id, 31, 32, moveAmount-i-1); atIntersection = false}},
-                            {text: 'Boven', onPress: () => {this.updateGameState(id, 30, 57); this.movePiece(id, 57, 58, moveAmount-i-1); atIntersection = false;}},
-                          ],
-                          {cancelable: false},
-                        );
-                    }else if(startPos == 63){
-                        endPoss = 38;
-                    }else if(startPos == 38){
-                         startPos = 38;
-                         endPoss = 64;
-                    } else {
-                        endPoss = startPos + 1;
-                    }
-                    console.log('check')
-                    console.log(startPos, endPos);
-                    if(startPos === endPos) {
-                        sleep(1500).then(() => {
-                            this.setModalVisible();
-                            this.setState({moveAmount: null, finishedTurn: true});
-                        });
-                    }
-                    }
-                    this.updateGameState(id, startPos, endPoss);
-                    startPos = endPoss;
-                });
-                sleepAmount = sleepAmount + 500;
-                }
+        var sleepAmount = 0;
+        console.log('hier');
+        console.log('joo');
+        while(moveAmount !== 0){
+            console.log('hallo');
+            if(interPos === 2){
+                break;
+            }
+            if(interPos === 10){
+                break;
+            }
+            if(interPos === 30){
+                break;
+            }
+            interPos += 1;
+            sleep(sleepAmount).then(() => {
+            if(startPos === 38){
+               var newPos = 64;
+           }else if(startPos === 52){
+               var newPos = 23;
+           }else if(startPos === 56){
+               var newPos = 51;
+           }else if(startPos === 63){
+               var newPos = 38;
+           }else if(startPos === 68){
+               var newPos = 0;
+           } else {
+               var newPos = startPos + 1;
+           }
+            this.updateGameState(id, startPos, newPos);
+            startPos = newPos;
+            });
+            moveAmount -= 1;
+            sleepAmount = sleepAmount + 500;
+        }
+        sleep(sleepAmount).then(() => {
+            if(interPos === 2){
+                 Alert.alert(
+                  'Een kruising',
+                  'Kies een richting voor welke weg je wilt volgen',
+                  [
+                    {text: 'Rechts', onPress: () => {this.updateGameState(id, 2, 3); this.movePiece(id, 3, moveAmount - 1); atIntersection = false}},
+                    {text: 'Beneden', onPress: () => {this.updateGameState(id, 2, 39); this.movePiece(id, 39, moveAmount - 1); atIntersection = false;}},
+                  ],
+                  {cancelable: false},
+                );
+            }else if(interPos === 10){
+                this.setState({showIntersectionModal: true, moveAmount: moveAmount});
+            }else if(interPos === 30){
+                Alert.alert(
+                  'Een kruising',
+                  'Kies een richting voor welke weg je wilt volgen',
+                  [
+                    {text: 'Links', onPress: () => {this.updateGameState(id, 30, 31); this.movePiece(id, 31, moveAmount- 1); atIntersection = false}},
+                    {text: 'Boven', onPress: () => {this.updateGameState(id, 30, 57); this.movePiece(id, 57, moveAmount- 1); atIntersection = false;}},
+                  ],
+                  {cancelable: false},
+                );
+            }else{
+                this.setModalVisible();
+                this.setState({moveAmount: null, finishedTurn: true});
+            }
+        });
+
     }
 
     addPiece(teamId, newPos){
@@ -297,6 +296,17 @@ export default class BoardScreen extends Component {
 
     moveAmount(data){
         this.setState({moveAmount: data[0],faceValue: data[1], showDice: false});
+    }
+
+    interAmount(value){
+        if(value >= 4){
+            this.updateGameState(this.state.teamTurn +1, 10, 53);
+            this.movePiece(this.state.teamTurn +1, 53, this.state.moveAmount- 1);
+        } else {
+            this.updateGameState(this.state.teamTurn +1, 10, 11);
+            this.movePiece(this.state.teamTurn +1, 11, this.state.moveAmount- 1);
+        }
+        this.setState({showIntersectionModal: !this.state.showIntersectionModal});
     }
 
     setModalVisible() {
@@ -414,10 +424,11 @@ export default class BoardScreen extends Component {
             return(
                 <ScrollView
                     horizontal={true}
+                    //style={{flexDirection: 'row-reverse'}}
                 >
                 <Grid>
 
-                    <Row style={{marginTop: 5}}>
+                    <Row>
                         <Col id='1' style={styles.tile}><View>{this.renderPieces(0)}</View></Col>
                         <Col id='2' style={styles.tile}><View>{this.renderPieces(1)}</View></Col>
                         <Col id='3' style={styles.tile}><View>{this.renderPieces(2)}</View></Col>
@@ -434,7 +445,7 @@ export default class BoardScreen extends Component {
                         <Col id='14' style={styles.tile}><View>{this.renderPieces(13)}</View></Col>
                     </Row>
 
-                    <Row style={{marginTop: 5}}>
+                    <Row>
                         <Col id='69' style={styles.tile}><View>{this.renderPieces(68)}</View></Col>
                         <Col id='1' style={styles.nonTile}><Text>2</Text></Col>
                         <Col id='40' style={styles.tile}><View>{this.renderPieces(39)}</View></Col>
@@ -451,7 +462,7 @@ export default class BoardScreen extends Component {
                         <Col id='15' style={styles.tile}><View>{this.renderPieces(14)}</View></Col>
                     </Row>
 
-                    <Row style={{marginTop: 5}}>
+                    <Row>
                         <Col id='68' style={styles.tile}><View>{this.renderPieces(67)}</View></Col>
                         <Col style={styles.nonTile}><Text>2</Text></Col>
                         <Col id='41' style={styles.tile}><View>{this.renderPieces(40)}</View></Col>
@@ -468,7 +479,7 @@ export default class BoardScreen extends Component {
                         <Col id='16' style={styles.tile}><View>{this.renderPieces(15)}</View></Col>
                     </Row>
 
-                    <Row style={{marginTop: 5}}>
+                    <Row>
                         <Col id='67' style={styles.tile}><View>{this.renderPieces(66)}</View></Col>
                         <Col style={styles.nonTile}><Text>2</Text></Col>
                         <Col id='42' style={styles.tile}><View>{this.renderPieces(41)}</View></Col>
@@ -485,7 +496,7 @@ export default class BoardScreen extends Component {
                         <Col id='17' style={styles.tile}><View>{this.renderPieces(16)}</View></Col>
                     </Row>
 
-                    <Row style={{marginTop: 5}}>
+                    <Row>
                         <Col id='66' style={styles.tile}><View>{this.renderPieces(65)}</View></Col>
                         <Col style={styles.nonTile}><Text>2</Text></Col>
                         <Col style={styles.nonTile}><Text>3</Text></Col>
@@ -502,7 +513,7 @@ export default class BoardScreen extends Component {
                         <Col id='18' style={styles.tile}><View>{this.renderPieces(17)}</View></Col>
                     </Row>
 
-                    <Row style={{marginTop: 5}}>
+                    <Row>
                         <Col id='65' style={styles.tile}><View>{this.renderPieces(64)}</View></Col>
                         <Col style={styles.nonTile}><Text>2</Text></Col>
                         <Col style={styles.nonTile}><Text>3</Text></Col>
@@ -519,7 +530,7 @@ export default class BoardScreen extends Component {
                         <Col id='19' style={styles.tile}><View>{this.renderPieces(18)}</View></Col>
                     </Row>
 
-                    <Row style={{marginTop: 5}}>
+                    <Row>
                         <Col id='39' style={styles.tile}><View>{this.renderPieces(38)}</View></Col>
                         <Col id='64' style={styles.tile}><View>{this.renderPieces(63)}</View></Col>
                         <Col id='63' style={styles.tile}><View>{this.renderPieces(62)}</View></Col>
@@ -536,7 +547,7 @@ export default class BoardScreen extends Component {
                         <Col id='20' style={styles.tile}><View>{this.renderPieces(19)}</View></Col>
                     </Row>
 
-                    <Row style={{marginTop: 5}}>
+                    <Row>
                         <Col id='38' style={styles.tile}><View>{this.renderPieces(37)}</View></Col>
                         <Col style={styles.nonTile}><Text>2</Text></Col>
                         <Col style={styles.nonTile}><Text>3</Text></Col>
@@ -553,7 +564,7 @@ export default class BoardScreen extends Component {
                         <Col id='21' style={styles.tile}><View>{this.renderPieces(20)}</View></Col>
                     </Row>
 
-                    <Row style={{marginTop: 5}}>
+                    <Row>
                         <Col id='37' style={styles.tile}><View>{this.renderPieces(36)}</View></Col>
                         <Col style={styles.nonTile}><Text>2</Text></Col>
                         <Col style={styles.nonTile}><Text>3</Text></Col>
@@ -570,7 +581,7 @@ export default class BoardScreen extends Component {
                         <Col style={styles.nonTile}><Text>14</Text></Col>
                     </Row>
 
-                    <Row style={{marginTop: 5}}>
+                    <Row>
                         <Col id='36' style={styles.tile}><View>{this.renderPieces(35)}</View></Col>
                         <Col id='35' style={styles.tile}><View>{this.renderPieces(34)}</View></Col>
                         <Col id='34' style={styles.tile}><View>{this.renderPieces(33)}</View></Col>
@@ -593,7 +604,7 @@ export default class BoardScreen extends Component {
 
         const DiceSection = () => {
             if(this.state.showDice === true){
-                return <Dice throwDice={{moveAmount: (amount) => this.moveAmount(amount)}} />
+                return <Dice intersection={false} throwDice={{moveAmount: (amount) => this.moveAmount(amount)}} />
             } else {
                 return null
             }
@@ -622,7 +633,7 @@ export default class BoardScreen extends Component {
                     <View style={styles.buttons}>
                     <Button
                         title="Move"
-                        onPress={() => this.movePiece(this.state.teamTurn +1, this.state.curTeamPosition, this.state.curTeamPosition + this.state.moveAmount, this.state.moveAmount)}
+                        onPress={() => this.movePiece(this.state.teamTurn +1, this.state.curTeamPosition, this.state.moveAmount)}
                      />
                      </View>
                 )
@@ -641,6 +652,28 @@ export default class BoardScreen extends Component {
                   }}>
                   <View style={styles.modal}>
                     <Challenges curTeam={this.state.teamTurn} teams={this.state.teams} close={{close: () => this.setModalVisible()}} handlePoints={{updateTeams: (data) => this.updateTeams(data)}} />
+                  </View>
+                </Modal>
+            )
+        }
+
+        const IntersectionModel = () => {
+            return(
+                <Modal
+                  animationType="fade"
+                  transparent={true}
+                  visible={this.state.showIntersectionModal}
+                  onRequestClose={() => {
+                  }}>
+                  <View style={styles.modal}>
+                      <Text style={styles.modalTitleText}>Een kruising!</Text>
+                      <View style={styles.line} />
+                      <Text style={styles.descText}>Gooi met de dobbelsteen. Gooi je 4 of hoger mag je naar beneden anders ga je naar rechts</Text>
+                      <Dice intersection={true} throwDice={{interAmount: (amount) => this.interAmount(amount)}} />
+                      <View style={styles.line} />
+                      <Image
+                      style={styles.image}
+                      source={require('./Henk.png')} />
                   </View>
                 </Modal>
             )
@@ -682,6 +715,7 @@ export default class BoardScreen extends Component {
             </View>
                 <ChallengeModel />
                 <ScoreBoardModal />
+                <IntersectionModel />
           </View>
       );
     }
@@ -704,6 +738,18 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 2,
     alignItems: 'center',
+  },
+  modalTitleText: {
+      color: 'white',
+      fontSize: 35,
+      fontWeight: 'bold',
+      paddingTop: 15,
+  },
+  descText: {
+      textAlign: 'center',
+      color: 'white',
+      fontSize: 20,
+      maxWidth: '90%',
   },
   titleText: {
       flex: 4,
@@ -748,5 +794,15 @@ const styles = StyleSheet.create({
       backgroundColor: 'blue',
       borderRadius: 15,
       alignItems: 'center',
+  },
+  image: {
+      height: 60,
+      resizeMode: "contain",
+  },
+  line: {
+      borderBottomColor: 'white',
+      borderWidth: 1,
+      width: 300,
+      margin: 10,
   },
 });

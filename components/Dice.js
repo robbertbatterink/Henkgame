@@ -9,6 +9,7 @@ class Dice extends Component {
       face: 9856,
       rollCount: 1,
       isRolling: false,
+      pressed: false,
     };
         this.DiceRoll = this.DiceRoll.bind(this);
         this.HandleDiceThrow = this.HandleDiceThrow.bind(this);
@@ -36,7 +37,7 @@ class Dice extends Component {
   HandleDiceThrow(){
     if (this.state.isRolling)return;
     let val = this.GenerateRandomInt(5,15);
-    this.setState({rollCount: val});
+    this.setState({rollCount: val, pressed: true});
     for (let i = 0; i <= val; i++){
       setTimeout(this.DiceRoll, 250 * i);
     }
@@ -44,7 +45,12 @@ class Dice extends Component {
 
   sendFaceValue(){
       //this.props.throwDice.moveAmount([this.state.faceValue + 1, this.state.face]);
-      this.props.throwDice.moveAmount([6, this.state.face]);
+      console.log(this.props.intersection);
+      if(!this.props.intersection){
+          this.props.throwDice.moveAmount([6, this.state.face]);
+    }else {
+        this.props.throwDice.interAmount(this.state.faceValue + 1);
+    }
   }
 
   render() {
@@ -55,10 +61,9 @@ class Dice extends Component {
         <Button
             title="Throw Dice"
             onPress={this.HandleDiceThrow}
+            disabled={this.state.pressed}
         />
         </View>
-        <Text>Dice Value: {this.state.faceValue + 1}</Text>
-        <Text>Roll: {this.state.rollCount}</Text>
       </View>
     );
   }
