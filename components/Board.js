@@ -23,44 +23,11 @@ export default class BoardScreen extends Component {
             showChallengeModal: false,
             showScoreBoardModal: false,
             showIntersectionModal: false,
-            teams: [
-                {
-                    id: 1,
-                    players: [
-                      "Player 1",
-                      "Player 2",
-                      "Player 3",
-                    ],
-                    position: 0,
-                    playerTurn: null,
-                    teamName: "Team 1",
-                  },
-                 	{
-                    id: 2,
-                    players: [
-                      "Player 1",
-                      "Player 2",
-                    ],
-                    position: 0,
-                    playerTurn: null,
-                    teamName: "Team 2",
-                  },
-                  {
-                    id: 3,
-                    players: [
-                      "Player 1",
-                    ],
-                    position: 0,
-                    playerTurn: null,
-                    teamName: "Team 3",
-                  },
-              ],
-            // gameState: [
-            //     [],[],[],[],[],[],
-            //     [],[],[],[],
-            //     [],[],[],[],[],[],
-            //     [],[],[],[],
-            // ],
+            showInteractModal: false,
+            boardRow: 'row',
+            teams: [],
+            row: [0,1,2,3,4,5,6,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,57,58,59,60,61,62,63,64,65,66,67,68],
+            reverseRow: [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,46,47,48,49,50,51,52,53,54,55,56],
             gameState: [
                 [],[],[], //0,1,2 //to first intersection
                 [],[],[],[],[],[],[],[],//3,4,5,6,7,8,9,10 // going straight from first intersection to second intersection
@@ -95,7 +62,6 @@ export default class BoardScreen extends Component {
         )
 
         var teams =  this.props.screenProps.teams;
-        //var teams =  this.state.teams;
 
         teams.map((team) => (
             setTimeout(
@@ -186,9 +152,17 @@ export default class BoardScreen extends Component {
                 this.updateTeamPosition(teamId, newPos);
             //}.bind(this),200
         //)
+        if(this.state.row.includes(newPos)){
+            this.setState({boardRow: 'row'});
+        } else if(this.state.reverseRow.includes(newPos)){
+            this.setState({boardRow: 'row-reverse'});
+        } else{
+            console.log('something not right');
+        }
     }
 
     movePiece(teamId, curPos, moves) {
+        this.setState({showInteractModal: false});
         const sleep = (milliseconds) => {
                 return new Promise(resolve => setTimeout(resolve, milliseconds))
         }
@@ -199,10 +173,9 @@ export default class BoardScreen extends Component {
         var moveAmount = moves;
         let atIntersection = false;
         var sleepAmount = 0;
-        console.log('hier');
-        console.log('joo');
+
         while(moveAmount !== 0){
-            console.log('hallo');
+
             if(interPos === 2){
                 break;
             }
@@ -212,6 +185,7 @@ export default class BoardScreen extends Component {
             if(interPos === 30){
                 break;
             }
+
             interPos += 1;
             sleep(sleepAmount).then(() => {
             if(startPos === 38){
@@ -239,8 +213,8 @@ export default class BoardScreen extends Component {
                   'Een kruising',
                   'Kies een richting voor welke weg je wilt volgen',
                   [
-                    {text: 'Rechts', onPress: () => {this.updateGameState(id, 2, 3); this.movePiece(id, 3, moveAmount - 1); atIntersection = false}},
-                    {text: 'Beneden', onPress: () => {this.updateGameState(id, 2, 39); this.movePiece(id, 39, moveAmount - 1); atIntersection = false;}},
+                    {text: 'Rechts', onPress: () => {this.updateGameState(id, 2, 3); this.movePiece(id, 3, moveAmount); atIntersection = false}},
+                    {text: 'Beneden', onPress: () => {this.updateGameState(id, 2, 39); this.movePiece(id, 39, moveAmount); atIntersection = false;}},
                   ],
                   {cancelable: false},
                 );
@@ -251,8 +225,8 @@ export default class BoardScreen extends Component {
                   'Een kruising',
                   'Kies een richting voor welke weg je wilt volgen',
                   [
-                    {text: 'Links', onPress: () => {this.updateGameState(id, 30, 31); this.movePiece(id, 31, moveAmount- 1); atIntersection = false}},
-                    {text: 'Boven', onPress: () => {this.updateGameState(id, 30, 57); this.movePiece(id, 57, moveAmount- 1); atIntersection = false;}},
+                    {text: 'Links', onPress: () => {this.updateGameState(id, 30, 31); this.movePiece(id, 31, moveAmount); atIntersection = false}},
+                    {text: 'Boven', onPress: () => {this.updateGameState(id, 30, 57); this.movePiece(id, 57, moveAmount); atIntersection = false;}},
                   ],
                   {cancelable: false},
                 );
@@ -347,84 +321,12 @@ export default class BoardScreen extends Component {
     }
     render(){
         const { navigate } = this.props.navigation
-        // const Board = () => {
-        //     return(
-        //         <View style={{maxHeight: 216}}>
-        //             <View style={{flexDirection: 'row'}}>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(5)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(6)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(7)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(8)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(9)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(10)}
-        //                 </View>
-        //             </View>
-        //             <View style={{alignContent: 'space-between', flexWrap:'wrap'}}>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(4)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(3)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(2)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(1)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(11)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(12)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(13)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(14)}
-        //                 </View>
-        //             </View>
-        //             <View style={{flexDirection: 'row'}}>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(0)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(19)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(18)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(17)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(16)}
-        //                 </View>
-        //                 <View style={styles.tile}>
-        //                     {this.renderPieces(15)}
-        //                 </View>
-        //             </View>
-        //             <Text style={{color: 'white'}}>Start</Text>
-        //         </View>
-        //     )
-        // }
+
         const Board = () => {
             return(
                 <ScrollView
                     horizontal={true}
-                    //style={{flexDirection: 'row-reverse'}}
+                    style={{flexDirection: this.state.boardRow}}
                 >
                 <Grid>
 
@@ -685,9 +587,47 @@ export default class BoardScreen extends Component {
                   animationType="fade"
                   transparent={true}
                   visible={this.state.showScoreBoardModal}
-                  onRequestClose={() => this.setState({showScoreBoardModal: !this.state.showScoreBoardModal})}>
+                  onRequestClose={() => this.setState({showScoreBoardModal: !this.state.showScoreBoardModal, showInteractModal: true})}>
                   <View style={styles.modal}>
-                    <ScoreBoard teams={this.state.teams} close={{close: () => this.setState({showScoreBoardModal: !this.state.showScoreBoardModal})}} />
+                    <ScoreBoard teams={this.state.teams} close={{close: () => this.setState({showScoreBoardModal: !this.state.showScoreBoardModal, showInteractModal: true})}} />
+                  </View>
+                </Modal>
+            )
+        }
+
+        const InteractModal = () => {
+            return(
+                <Modal
+                  animationType="fade"
+                  transparent={true}
+                  visible={this.state.showInteractModal}
+                  onRequestClose={() => {}}>
+                  <View style={styles.modal}>
+                      <Text style={styles.modalTitleText}>{this.state.curTeamName} is aan zet!</Text>
+                      <View style={styles.line} />
+                      <Text style={styles.descText}>{this.state.curTurnPlayer} Gooit met de dobbelsteen.</Text>
+
+                          <DiceSection />
+                          <Text style={{color: "white", fontSize: 52}}>{String.fromCharCode(this.state.faceValue)}</Text>
+                          <NextTurn />
+                          <MovePlayer />
+                          <View style={styles.buttons}>
+                          <Button
+                              title="ScoreBoard"
+                              onPress={() => this.setState({showScoreBoardModal: !this.state.showScoreBoardModal, showInteractModal: false})}
+                           />
+                          </View>
+                          <View style={styles.buttons}>
+                           <Button
+                               title="Close"
+                               onPress={() => this.setState({showInteractModal: false})}
+                            />
+                            </View>
+
+                      <View style={styles.line} />
+                      <Image
+                      style={styles.image}
+                      source={require('./Henk.png')} />
                   </View>
                 </Modal>
             )
@@ -702,20 +642,15 @@ export default class BoardScreen extends Component {
                 <Text style={{color: "white"}}>Current Team: {this.state.curTeamName} with player: {this.state.curTurnPlayer}</Text>
             </View>
             <View style={styles.buttonContainer}>
-                <DiceSection />
-                <Text style={{color: "white", fontSize: 52}}>{String.fromCharCode(this.state.faceValue)}</Text>
-                <NextTurn />
-                <MovePlayer />
-                <View style={styles.buttons}>
-                <Button
-                    title="ScoreBoard"
-                    onPress={() => this.setState({showScoreBoardModal: !this.state.showScoreBoardModal})}
-                 />
-                 </View>
+            <Button
+                title="interact"
+                onPress={() => this.setState({showInteractModal: !this.state.showInteractModal}, console.log('hallo'))}
+             />
             </View>
                 <ChallengeModel />
                 <ScoreBoardModal />
                 <IntersectionModel />
+                <InteractModal />
           </View>
       );
     }
@@ -729,7 +664,8 @@ const styles = StyleSheet.create({
   },
   board: {
       flex: 8,
-      paddingTop: 15,
+      maxHeight: 600,
+      paddingTop: 50,
   },
   buttons: {
     paddingTop: 15,
